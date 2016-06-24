@@ -17,7 +17,7 @@ go.app = function() {
             if(_.isEmpty(self.im.config.wit)) {
                 return self.states.create('states_start');
             }
-            return new FreeText(name, {
+            return new FreeText(name, opts, {
                 question: opts.msg === null ? prompt : opts.msg,
                 next: function(response) {
                     return go.utils
