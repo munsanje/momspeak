@@ -56,6 +56,7 @@ go.app = function() {
         // converse
         self.states.add('states_converse', function(name, opts) {
             if(_.isEmpty(self.im.config.wit)) {
+
                 return self.states.create('states_start');
             }
             return new FreeText(name, {
@@ -121,9 +122,9 @@ go.app = function() {
             });
         });
 
-        self.states.add('states_start', function(name) {
+        self.states.add('states_start', function(name, opts) {
             return new FreeText(name, {
-                question: prompt,
+                question: opts.msg === null ? prompt : opts.msg,
                 next: 'states_converse'
             });
         });
