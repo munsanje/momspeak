@@ -72,7 +72,7 @@ go.app = function() {
         self.states.add('states_start', function(name) {
             return new FreeText(name, {
                 question: prompt,
-                next: states_converse
+                next: 'states_converse'
             });
         });
 
