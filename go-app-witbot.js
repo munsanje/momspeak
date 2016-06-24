@@ -51,7 +51,7 @@ go.app = function() {
     var prompt = 'Welcome to MomSpeak! What can I help you with?';
 
     var MomSpeak = App.extend(function(self){
-        App.call(self, 'states_converse');
+        App.call(self, 'states_start');
 
         // converse
         self.states.add('states_converse', function(name, opts) {
