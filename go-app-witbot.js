@@ -51,7 +51,7 @@ go.app = function() {
     var prompt = 'Welcome to MomSpeak!';
 
     var MomSpeak = App.extend(function(self){
-        App.call(self, 'states_start');
+        App.call(self, 'states_converse');
 
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -79,7 +79,7 @@ go.app = function() {
                             if("error" in wit_response) {
                                 return new EndState(name, {
                                     text: "Error occurred. Shutting down.",
-                                    next: states_start
+                                    next: 'states_start'
                                 });
                             }
                           // sort entities returned by confidence
@@ -92,9 +92,15 @@ go.app = function() {
                             });
                             // if no entities satisfy threshold...
                             if(_.isEmpty(entities)) {
-                                return self.states.create('states_start', {
-                                    from_wit: true  // FIXME look into from_wit
-                                });
+                                // return self.states.create('states_start', {
+                                //     from_wit: true  // FIXME look into from_wit
+                                // });
+                                return {
+                                    name: 'states_converse',
+                                    creator_opts: {
+                                    msg: "Sorry, could you say that again?"
+                                    }
+                                };
                             }
                             return {
                                 name: wit_response.entities[0],
@@ -124,7 +130,7 @@ go.app = function() {
 
         self.states.add('states_start', function(name, opts) {
             return new FreeText(name, {
-                question: opts.msg === null ? prompt : opts.msg,
+                question: prompt,
                 next: 'states_converse'
             });
         });
