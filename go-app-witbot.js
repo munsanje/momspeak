@@ -94,7 +94,7 @@ go.app = function() {
                                 });
                             }
                             return {
-                                name: $(wit_response.entities[0]),
+                                name: wit_response.entities[0],
                                 creator_opts: {
                                     msg: wit_response.msg
                                 }
@@ -103,6 +103,15 @@ go.app = function() {
                 }
             });
         });
+        self.states.add('user_state', function(name, opts) {
+            return {
+                name: 'states_converse',
+                creator_opts: {
+                    msg: opts.msg
+                }
+            };
+        });
+
         self.states.add('states_end', function(name) {
             return new EndState(name, {
                 text: 'Thank you for using our service.',
