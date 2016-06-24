@@ -17,9 +17,10 @@ go.app = function() {
             if(_.isEmpty(self.im.config.wit)) {
                 return self.states.create('states_start');
             }
-            return new FreeText(name, opts, {
+            return new FreeText(name, {
                 question: opts.msg === null ? prompt : opts.msg,
                 next: function(response) {
+                    console.log("opts: " + opts);
                     return go.utils
                         .converse(self.im, self.im.config.wit.token, response)
                         // log wit's response
@@ -32,6 +33,7 @@ go.app = function() {
                         })
                         // taking object returned by `converse`
                         .then(function(wit_response) {
+                            console.log(wit_response);
                             if("error" in wit_response) {
                                 return new EndState(name, {
                                     text: "Error occurred. Shutting down.",
