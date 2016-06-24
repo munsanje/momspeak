@@ -7,7 +7,7 @@ go.app = function() {
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
 
-    var prompt = 'Welcome to MomSpeak! What can I help you with?';
+    var prompt = 'Welcome to MomSpeak!';
 
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_start');
@@ -70,7 +70,10 @@ go.app = function() {
         });
 
         self.states.add('states_start', function(name) {
-            return self.states.create(states_converse);
+            return new FreeText(name, {
+                question: $(prompt),
+                next: states_converse
+            });
         });
 
     });
