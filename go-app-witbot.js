@@ -112,7 +112,7 @@ go.app = function() {
 
         self.states.add('states_start', function(name) {
             return new FreeText(name, {
-                question: $(prompt),
+                question: prompt,
                 next: states_converse
             });
         });
