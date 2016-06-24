@@ -1,15 +1,27 @@
-/*jshint -W030*/
 var go = {};
 go;
 
 var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
+var SESSION_ID = vumigo.utils.uuid();
 
-// TODO need to generated session_id whenever new user logs on
+
 go.utils = {
   //  return {action: 'action', wit_msg: 'wit_msg'}
+
     converse: function(im, token, content) {
+        resp = {};
+        while(resp.type !== "stop") {
+            resp = _.union(resp, converse_probe(im, token, content));
+            if("error" in resp) {
+                return resp;
+            }
+        }
+        return resp;
+    },
+
+    converse_probe: function(im, token, content) {
         var http = new JsonApi(im, {
             headers: {
                 'Authorization': ['Bearer ' + token],
@@ -17,10 +29,11 @@ go.utils = {
                 'Accept': ['application/json']
             }
         });
-        return http.get('https://api.wit.ai/converse?', {
+        return http.post('https://api.wit.ai/converse?', {
             params: {
-                v: '20160624', // TODO write method that extracts version
-                q: content
+                v: '20160624', // write method that extracts version
+                session_id: SESSION_ID,
+                q: content,
             }
         });
     }
@@ -46,7 +59,7 @@ go.app = function() {
                 return self.states.create('states_start');
             }
             return new FreeText(name, {
-                question: opts.wit_msg === null ? prompt : opts.wit_msg,
+                question: opts.msg === null ? prompt : opts.msg,
                 next: function(response) {
                     return go.utils
                         .converse(self.im, self.im.config.wit.token, response)
@@ -60,10 +73,17 @@ go.app = function() {
                         })
                         // taking object returned by `converse`
                         .then(function(wit_response) {
+                            if("error" in wit_response) {
+                                return new EndState(name, {
+                                    text: "Error occurred. Shutting down.",
+                                    next: states_start
+                                });
+                            }
                           // sort entities returned by confidence
                             var all_entities = _.sortBy(wit_response.data.entities,
                                                         'confidence');
                             // select only entities that satisfy threshold defined in config
+                            // NOTE filter returns array ([a,b,c])
                             var entities = _.filter(all_entities, function(entity) {
                                 return entity.confidence > self.im.config.wit.confidence_threshold;
                             });
@@ -74,10 +94,10 @@ go.app = function() {
                                 });
                             }
                             return {
-                              name: $(wit_response.action),
-                              creator_opts: {
-                                  wit_msg: wit_response.wit_msg
-                              }
+                                name: $(wit_response.entities[0]),
+                                creator_opts: {
+                                    msg: wit_response.msg
+                                }
                             };
                         });
                 }
@@ -86,7 +106,7 @@ go.app = function() {
         self.states.add('states_end', function(name) {
             return new EndState(name, {
                 text: 'Thank you for using our service.',
-                next: 'start_start'
+                next: 'states_start'
             });
         });
 
@@ -95,7 +115,11 @@ go.app = function() {
         });
 
     });
-};
+
+    return {
+        MomSpeak: MomSpeak
+    };
+}();
 
 go.init = function() {
     var vumigo = require('vumigo_v02');
