@@ -57,7 +57,7 @@ go.app = function() {
                                 return {
                                     name: 'states_converse',
                                     creator_opts: {
-                                    msg: "Sorry, could you say that again?"
+                                        msg: "Sorry, could you say that again?"
                                     }
                                 };
                             }
@@ -65,6 +65,7 @@ go.app = function() {
                                 name: wit_response.entities[0],
                                 creator_opts: {
                                     msg: wit_response.msg
+                                    self.im.log("Wit message: " + msg);
                                 }
                             };
                         });
