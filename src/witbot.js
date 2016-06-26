@@ -68,7 +68,6 @@ go.app = function() {
                                 name: wit_response.entities[0],
                                 creator_opts: {
                                     msg: wit_response.msg
-                                    self.im.log("Wit message: " + msg);
                                 }
                             };
                         });
