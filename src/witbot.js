@@ -15,8 +15,11 @@ go.app = function() {
         // converse
         self.states.add('states_converse', function(name, opts) {
             if(_.isEmpty(self.im.config.wit)) {
-
-                return self.states.create('states_start');
+                return new EndState(name, {
+                    text: "Error occurred. Shutting down.",
+                    next: 'states_start'
+                });
+                // return self.states.create('states_start');
             }
             return new FreeText(name, {
                 question: opts.msg === null ? prompt : opts.msg,
