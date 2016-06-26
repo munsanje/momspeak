@@ -45,7 +45,7 @@ go.utils = {
         });
         return http.post('https://api.wit.ai/converse?', {
             params: {
-                v: '20160624', // write method that extracts version
+                v: VERSION, // write method that extracts version
                 session_id: SESSION_ID,
                 q: content,
             }
@@ -123,7 +123,6 @@ go.app = function() {
                                 name: wit_response.entities[0],
                                 creator_opts: {
                                     msg: wit_response.msg
-                                    self.im.log("Wit message: " + msg);
                                 }
                             };
                         });
