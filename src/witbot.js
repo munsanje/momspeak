@@ -16,7 +16,7 @@ go.app = function() {
         self.states.add('states_converse', function(name, opts) {
             if(_.isEmpty(self.im.config.wit)) {
                 return new EndState(name, {
-                    text: "Error occurred. Shutting down.",
+                    text: "Config file empty. Shutting down.",
                     next: 'states_start'
                 });
                 // return self.states.create('states_start');
@@ -40,7 +40,7 @@ go.app = function() {
                             console.log(wit_response);
                             if("error" in wit_response) {
                                 return new EndState(name, {
-                                    text: "Error occurred. Shutting down.",
+                                    text: "Error at Wit server. Shutting down.",
                                     next: 'states_start'
                                 });
                             }
