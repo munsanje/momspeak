@@ -9,7 +9,14 @@ go.utils = {
 
     converse: function(im, token, content) {
         resp = {};
-        while(resp.type !== "msg") {
+        // while(resp.type !== "msg") {
+        converse_probe(im, token, content)
+              .then(function (results) {  // jshint ignore:line
+                  return self.im.log(results)
+                        .then(function() {
+                            return results;
+                        });
+              });
             resp = converse_probe(im, token, content)
                   .then(function (results) {  // jshint ignore:line
                       return self.im.log(results)
@@ -17,11 +24,11 @@ go.utils = {
                                 return results;
                             });
                   });
-            if("error" in resp) {
-                self.im.log("Error in converse");
-                return resp;
-            }
-        }
+        //     if("error" in resp) {
+        //         self.im.log("Error in converse");
+        //         return resp;
+        //     }
+        // }
         return resp;
     },
 
