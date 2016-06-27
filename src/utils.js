@@ -12,24 +12,13 @@ var converse_probe = function(im, token, content) {
       'Content-Type': ['application/json']
     }
   });
-    var resp = http.post('https://api.wit.ai/converse?', {
+    return http.post('https://api.wit.ai/converse?', {
     params: {
       v: im.config.wit.version, // write method that extracts version
       session_id: SESSION_ID,
       q: content,
     }
   });
-  if(resp.type == 'merge')
-  {
-      return http.post('https://api.wit.ai/converse?', {
-      params: {
-        v: im.config.wit.version, // write method that extracts version
-        session_id: SESSION_ID,
-        q: content,
-      }
-    });
-  }
-  return resp;
 };
 
 go.utils = {
@@ -38,10 +27,20 @@ go.utils = {
                           .then(function(results) {
                               return im.log(results)
                                     .then(function() {
+                                      if(results.type === 'msg')
+                                      {
+                                          return converse_probe(im, token, content)
+                                                  .then(function(results) {
+                                                      return im.log(results)
+                                                        .then(function() {
+                                                            return results;
+                                                        });
+                                                  });
+                                      }
                                         return results;
                                     });
                           });
-            }
+              }
     // converse: function(im, token, content) {
     //     return converse_probe(im, token, content)
     //           .then(function (results) {  // jshint ignore:line
