@@ -28,6 +28,7 @@ var converse_probe = function(im, token, content) {
             }
             return response;
         });
+        return resp;
 };
 
 go.utils = {
