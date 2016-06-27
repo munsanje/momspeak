@@ -5,7 +5,7 @@ var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var SESSION_ID = vumigo.utils.uuid();
-var VERSION = '20160626';
+var VERSION = self.im.config.wit.version;
 
 go.utils = {
   //  return {action: 'action', wit_msg: 'wit_msg'}
@@ -63,8 +63,8 @@ go.app = function() {
     var FreeText = vumigo.states.FreeText;
 
     var prompt = 'Welcome to MomSpeak!';
-    var TOKEN = 'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
-    var THRESHOLD = 0.8;
+    var TOKEN = self.im.config.wit.token; //'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
+    var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_converse');

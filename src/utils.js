@@ -2,7 +2,7 @@ var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var SESSION_ID = vumigo.utils.uuid();
-var VERSION = '20160626';
+var VERSION = self.im.config.wit.version;
 
 go.utils = {
   //  return {action: 'action', wit_msg: 'wit_msg'}

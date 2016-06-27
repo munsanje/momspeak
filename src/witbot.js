@@ -8,8 +8,8 @@ go.app = function() {
     var FreeText = vumigo.states.FreeText;
 
     var prompt = 'Welcome to MomSpeak!';
-    var TOKEN = 'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
-    var THRESHOLD = 0.8;
+    var TOKEN = self.im.config.wit.token; //'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
+    var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_converse');

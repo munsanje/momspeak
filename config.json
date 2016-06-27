@@ -7,6 +7,7 @@
     },
     "wit": {
         "token": "CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS",
-        "confidence_threshold": 0.8
+        "confidence_threshold": 0.8,
+        "version": 20160626
     }
 }
