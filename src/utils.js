@@ -4,8 +4,24 @@ var JsonApi = vumigo.http.api.JsonApi;
 var SESSION_ID = vumigo.utils.uuid();
 // var VERSION = self.im.config.wit.version;
 
+var converse_probe = function(im, token, content) {
+  var http = new JsonApi(im, {
+    headers: {
+      'Authorization': ['Bearer ' + token],
+      'Accept': ['application/vnd.wit.' + self.im.config.wit.version + "+json"],
+      'Content-Type': ['application/json']
+    }
+  });
+  return http.post('https://api.wit.ai/converse?', {
+    params: {
+      v: self.im.config.wit.version, // write method that extracts version
+      session_id: SESSION_ID,
+      q: content,
+    }
+  });
+};
+
 go.utils = {
-  //  return {action: 'action', wit_msg: 'wit_msg'}
 
     converse: function(im, token, content) {
         resp = {};
@@ -24,28 +40,6 @@ go.utils = {
                                 return results;
                             });
                   });
-        //     if("error" in resp) {
-        //         self.im.log("Error in converse");
-        //         return resp;
-        //     }
-        // }
         return resp;
-    },
-
-    converse_probe: function(im, token, content) {
-        var http = new JsonApi(im, {
-            headers: {
-                'Authorization': ['Bearer ' + token],
-                'Accept': ['application/vnd.wit.' + self.im.config.wit.version + "+json"],
-                'Content-Type': ['application/json']
-            }
-        });
-        return http.post('https://api.wit.ai/converse?', {
-            params: {
-                v: self.im.config.wit.version, // write method that extracts version
-                session_id: SESSION_ID,
-                q: content,
-            }
-        });
     }
 };
