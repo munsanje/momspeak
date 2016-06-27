@@ -23,7 +23,7 @@ go.app = function() {
                 });
             }
             return new FreeText(name, {
-                question: opts.msg == undefined ? prompt : opts.msg, // jshint ignore:line
+                question: opts.msg == prompt, //undefined ? prompt : opts.msg, // jshint ignore:line
                 next: function(response) {
                     // console.log("opts: " + opts);
                       return go.utils.converse(self.im, self.im.config.wit.token, response)
@@ -45,6 +45,7 @@ go.app = function() {
                                   });
                               }
                             // sort entities returned by confidence
+                            /*
                               var all_entities = _.sortBy(wit_response.data.entities,
                                                           'confidence');
                               // select only entities that satisfy threshold defined in config
@@ -53,7 +54,7 @@ go.app = function() {
                                   return entity.confidence > self.im.config.wit.confidence_threshold;
                                   });
                               // if no entities satisfy threshold...
-                              if(true){//_.isEmpty(entities)) {
+                              if(_.isEmpty(entities)) {
                                   // return self.states.create('states_start', {
                                   //     from_wit: true  // FIXME look into from_wit
                                   // });
@@ -64,7 +65,9 @@ go.app = function() {
                                       }
                                   };
                               }
-                              im.log("Message: " +  wit_response.data.msg);
+                              */
+                              self.im.log("Message: " +  wit_response.data.msg);
+                              prompt = wit_response.data.msg;
                               return {
                                   name: 'states_converse',//wit_response.entities[0],
                                   creator_opts: {
