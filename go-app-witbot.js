@@ -23,10 +23,10 @@ var converse_probe = function(im, token, content) {
     }
   });
 
-  if(resp.type == 'merge') {
+  if(resp.body.type == 'merge') {
       return converse_probe(im, token, content);
   }
-  return resp;
+  return resp.body;
 };
 
 go.utils = {
