@@ -30,7 +30,7 @@ var converse_probe = function(im, token, content) {
 
                 )
                 .then(function(response) {
-                    if(response.type == 'merge') {
+                    if(response.data.type == 'merge') {
                         im.console.log("Executing merge");
                         return converse_probe(im, token, null);
                     }
@@ -38,8 +38,8 @@ var converse_probe = function(im, token, content) {
                     //     //converse_probe(im, token, null);
                     //     return response;
                     // }
-                    else if (response.type == 'msg') {
-                        im.console.log("Received message: " + response.msg);
+                    else if (response.data.type == 'msg') {
+                        im.console.log("Received message: " + response.data.msg);
                         return response;
 
                     }
