@@ -12,7 +12,7 @@ go.app = function() {
     // var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
-        App.call(self, 'states_converse');
+        App.call(self, 'states_start');
 
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -23,10 +23,10 @@ go.app = function() {
                 });
             }
             return new FreeText(name, {
-                question: opts.msg == null ? prompt : opts.msg, // jshint ignore:line
+                question: opts.msg == undefined ? prompt : opts.msg, // jshint ignore:line
                 next: function(response) {
                     // console.log("opts: " + opts);
-                    return go.utils.converse(self.im, self.im.config.wit.token, response)
+                      return go.utils.converse(self.im, self.im.config.wit.token, response)
                         // log wit's response
                         .then(function (wit_response) {
                             return self.im
@@ -38,40 +38,40 @@ go.app = function() {
                         // taking object returned by `converse`
                         .then(function(wit_response) {
                             // console.log(wit_response);
-                            if("error" in wit_response) {
-                                return new EndState(name, {
-                                    text: "Error at Wit server. Shutting down.",
-                                    next: 'states_start'
-                                });
-                            }
-                          // sort entities returned by confidence
-                            var all_entities = _.sortBy(wit_response.data.entities,
-                                                        'confidence');
-                            // select only entities that satisfy threshold defined in config
-                            // NOTE filter returns array ([a,b,c])
-                            var entities = _.filter(all_entities, function(entity) {
-                                return entity.confidence > self.im.config.wit.confidence_threshold;
-                            });
-                            // if no entities satisfy threshold...
-                            if(_.isEmpty(entities)) {
-                                // return self.states.create('states_start', {
-                                //     from_wit: true  // FIXME look into from_wit
-                                // });
-                                return {
-                                    name: 'states_converse',
-                                    creator_opts: {
-                                        msg: "Sorry, could you say that again?"
-                                    }
-                                };
-                            }
-                            return {
-                                name: 'states_converse',//wit_response.entities[0],
-                                creator_opts: {
-                                    msg: wit_response.data.msg
-                                }
-                            };
+                              if("error" in wit_response) {
+                                  return new EndState(name, {
+                                      text: "Error at Wit server. Shutting down.",
+                                      next: 'states_start'
+                                  });
+                              }
+                            // sort entities returned by confidence
+                              var all_entities = _.sortBy(wit_response.data.entities,
+                                                          'confidence');
+                              // select only entities that satisfy threshold defined in config
+                              // NOTE filter returns array ([a,b,c])
+                              var entities = _.filter(all_entities, function(entity) {
+                                  return entity.confidence > self.im.config.wit.confidence_threshold;
+                                  });
+                              // if no entities satisfy threshold...
+                              if(_.isEmpty(entities)) {
+                                  // return self.states.create('states_start', {
+                                  //     from_wit: true  // FIXME look into from_wit
+                                  // });
+                                  return {
+                                      name: 'states_converse',
+                                      creator_opts: {
+                                          msg: "Sorry, could you say that again?"
+                                      }
+                                  };
+                              }
+                              return {
+                                  name: 'states_converse',//wit_response.entities[0],
+                                  creator_opts: {
+                                      msg: wit_response.data.msg
+                                  }
+                              };
                         });
-                }
+                    }
             });
         });
         self.states.add('user_state', function(name, opts) {
