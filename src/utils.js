@@ -13,21 +13,30 @@ var converse_probe = function(im, token, content) {
       'Content-Type': ['application/json']
     }
   });
-    var resp = http.post('https://api.wit.ai/converse?', {
-              params: {
-                v: im.config.wit.version, // write method that extracts version
-                session_id: SESSION_ID,
-                q: content // jshint ignore:line
-              }
-        })
+    var resp = http.post('https://api.wit.ai/converse?', typeof content == null ?
+                  {
+                      params: {
+                        v: im.config.wit.version, // write method that extracts version
+                        session_id: SESSION_ID
+                      }
+                  } :
+                  {
+                    params: {
+                      v: im.config.wit.version, // write method that extracts version
+                      session_id: SESSION_ID,
+                      q: content // jshint ignore:line
+                    }
+                }
+
+        )
         .then(function(response) {
             if(response.type == 'merge') {
-                return converse_probe(im, token, undefined);
+                return converse_probe(im, token, null);
             }
-            else if (response.type == 'msg') {
-                //converse_probe(im, token, null);
-                return response;
-            }
+            // else if (response.type == 'msg') {
+            //     //converse_probe(im, token, null);
+            //     return response;
+            // }
             return response;
         });
     return resp;
