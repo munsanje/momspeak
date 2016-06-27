@@ -71,17 +71,16 @@ go.app = function() {
 
         // converse
         self.states.add('states_converse', function(name, opts) {
-          /**  if(_.isEmpty(self.im.config.wit)) {
+            if(_.isEmpty(self.im.config.wit)) {
                 return new EndState(name, {
                     text: "Config file empty. Shutting down.",
                     next: 'states_start'
                 });
-                // return self.states.create('states_start');
-            }*/
+            }
             return new FreeText(name, {
-                question: prompt,//opts.msg === null ? prompt : opts.msg,
+                question: opts.msg === null ? prompt : opts.msg,
                 next: function(response) {
-                    console.log("opts: " + opts);
+                    // console.log("opts: " + opts);
                     return go.utils
                         .converse(self.im, self.im.config.wit.token, response)
                         // log wit's response
@@ -94,7 +93,7 @@ go.app = function() {
                         })
                         // taking object returned by `converse`
                         .then(function(wit_response) {
-                            console.log(wit_response);
+                            // console.log(wit_response);
                             if("error" in wit_response) {
                                 return new EndState(name, {
                                     text: "Error at Wit server. Shutting down.",
