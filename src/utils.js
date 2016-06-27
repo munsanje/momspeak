@@ -19,11 +19,11 @@ var converse_probe = function(im, token, content) {
               q: content,
             }
         })
-        .then(function(resp) {
-            if(resp.type == 'merge') {
+        .then(function(response) {
+            if(response.type == 'merge') {
                 return converse_probe(im, token, content);
             }
-            return resp;
+            return response;
         });
 };
 
