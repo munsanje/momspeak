@@ -132,7 +132,7 @@ go.app = function() {
                             return {
                                 name: 'states_converse',//wit_response.entities[0],
                                 creator_opts: {
-                                    msg: wit_response.msg
+                                    msg: wit_response.data.msg
                                 }
                             };
                         });
