@@ -90,7 +90,7 @@ go.app = function() {
                 });
             }
             return new FreeText(name, {
-                question: opts.msg == prompt, //undefined ? prompt : opts.msg, // jshint ignore:line
+                question: opts.msg == undefined ? prompt : opts.msg, // jshint ignore:line
                 next: function(response) {
                     // console.log("opts: " + opts);
                       return go.utils.converse(self.im, self.im.config.wit.token, response)
@@ -133,11 +133,11 @@ go.app = function() {
                                   };
                               }
                               self.im.log("Message: " +  wit_response.data.msg);
-                              prompt = wit_response.data.msg;
+                              // prompt = 'Okay';
                               return {
                                   name: 'states_converse',//wit_response.entities[0],
                                   creator_opts: {
-                                      msg: wit_response.data.msg
+                                      msg: 'Okay'//wit_response.data.msg
                                   }
                               };
                         });
