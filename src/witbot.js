@@ -68,7 +68,7 @@ go.app = function() {
                               self.im.log("Message: " +  wit_response.data.msg);
                               // prompt = 'Okay';
                               return {
-                                  name: 'states_converse',//wit_response.entities[0],
+                                  name: 'user_state',//wit_response.entities[0],
                                   creator_opts: {
                                       msg: 'Okay'//wit_response.data.msg
                                   }
