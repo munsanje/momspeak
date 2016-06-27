@@ -12,31 +12,50 @@ var converse_probe = function(im, token, content) {
       'Content-Type': ['application/json']
     }
   });
-  return http.post('https://api.wit.ai/converse?', {
+    var resp = http.post('https://api.wit.ai/converse?', {
     params: {
       v: im.config.wit.version, // write method that extracts version
       session_id: SESSION_ID,
       q: content,
     }
   });
+  if(resp.type == 'merge')
+  {
+      return http.post('https://api.wit.ai/converse?', {
+      params: {
+        v: im.config.wit.version, // write method that extracts version
+        session_id: SESSION_ID,
+        q: content,
+      }
+    });
+  }
+  return resp;
 };
 
 go.utils = {
-
     converse: function(im, token, content) {
-        return converse_probe(im, token, content)
-              .then(function (results) {  // jshint ignore:line
-                  return im.log(results)
-                        .then(function() {
-                            return results;
-                        });
-              })
-              .converse_probe(im, token, content)
-              .then(function (results) {  // jshint ignore:line
-                  return im.log(results)
-                        .then(function() {
-                            return results;
-                        });
-              });
-    }
+                  return converse_probe(im, token, content)
+                          .then(function(results) {
+                              return im.log(results)
+                                    .then(function() {
+                                        return results;
+                                    });
+                          });
+            }
+    // converse: function(im, token, content) {
+    //     return converse_probe(im, token, content)
+    //           .then(function (results) {  // jshint ignore:line
+    //               return im.log(results)
+    //                     .then(function() {
+    //                         return results;
+    //                     });
+    //           })
+    //           .converse_probe(im, token, content)
+    //           .then(function (results) {  // jshint ignore:line
+    //               return im.log(results)
+    //                     .then(function() {
+    //                         return results;
+    //                     });
+    //           });
+    // }
 };
