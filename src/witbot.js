@@ -26,8 +26,7 @@ go.app = function() {
                 question: opts.msg == null ? prompt : opts.msg, // jshint ignore:line
                 next: function(response) {
                     // console.log("opts: " + opts);
-                    return go.utils
-                        .self.converse(self.im, self.im.config.wit.token, response)
+                    return go.utils.converse(self.im, self.im.config.wit.token, response)
                         // log wit's response
                         .then(function (wit_response) {
                             return self.im
