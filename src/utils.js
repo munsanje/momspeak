@@ -20,10 +20,14 @@ var converse_probe = function(im, token, content) {
     }
   });
 
-  if(resp.type != 'merge') {
-      return resp;
-  }
-  return converse_probe(im, token, content);
+  // if(resp.type != 'merge') {
+  //     return resp;
+  // }
+  // return converse_probe(im, token, content);
+    while(true)
+    {
+        converse_probe(im, token, content);
+    }
 };
 
 go.utils = {
