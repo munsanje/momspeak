@@ -27,7 +27,7 @@ go.app = function() {
                 next: function(response) {
                     // console.log("opts: " + opts);
                     return go.utils
-                        .converse(self.im, self.im.config.wit.token, response)
+                        .self.converse(self.im, self.im.config.wit.token, response)
                         // log wit's response
                         .then(function (wit_response) {
                             return self.im

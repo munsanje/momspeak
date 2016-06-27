@@ -4,7 +4,7 @@ var JsonApi = vumigo.http.api.JsonApi;
 var SESSION_ID = vumigo.utils.uuid();
 // var VERSION = self.im.config.wit.version;
 
-var converse_probe = function(im, token, content) {
+var converse_probe = function(self, im, token, content) {
   var http = new JsonApi(im, {
     headers: {
       'Authorization': ['Bearer ' + token],
@@ -23,7 +23,7 @@ var converse_probe = function(im, token, content) {
 
 go.utils = {
 
-    converse: function(im, token, content) {
+    converse: function(self, im, token, content) {
         resp = {};
         // while(resp.type !== "msg") {
         converse_probe(im, token, content)
