@@ -16,24 +16,16 @@ var converse_probe = function(im, token, content) {
       'Content-Type': ['application/json']
     }
   });
-    var resp = http.post('https://api.wit.ai/converse?', content == null ?
-            {
+    var resp = http.post('https://api.wit.ai/converse?', {
               params: {
                 v: im.config.wit.version, // write method that extracts version
                 session_id: SESSION_ID,
-                q: content == null ? undefined : content // jshint ignore:line
+                q: content // jshint ignore:line
               }
-            }
-          : {
-                params: {
-                  v: im.config.wit.version, // write method that extracts version
-                  session_id: SESSION_ID,
-                }
-            }
-        )
+        })
         .then(function(response) {
             if(response.type == 'merge') {
-                return converse_probe(im, token, null);
+                return converse_probe(im, token, undefined);
             }
             else if (response.type == 'msg') {
                 //converse_probe(im, token, null);
