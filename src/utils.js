@@ -44,7 +44,6 @@ var converse_probe = function(im, token, content) {
                         return response;
 
                     }
-                    im.log("Final type: " + response.data.type);
                     return response;
                 });
     im.log("Final response: " + resp);

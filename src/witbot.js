@@ -45,7 +45,7 @@ go.app = function() {
                                   });
                               }
                             // sort entities returned by confidence
-                            /*
+
                               var all_entities = _.sortBy(wit_response.data.entities,
                                                           'confidence');
                               // select only entities that satisfy threshold defined in config
@@ -65,7 +65,6 @@ go.app = function() {
                                       }
                                   };
                               }
-                              */
                               self.im.log("Message: " +  wit_response.data.msg);
                               prompt = wit_response.data.msg;
                               return {
