@@ -24,7 +24,7 @@ go.app = function() {
                 // return self.states.create('states_start');
             }*/
             return new FreeText(name, {
-                question: opts.msg === null ? prompt : opts.msg,
+                question: prompt,//opts.msg === null ? prompt : opts.msg,
                 next: function(response) {
                     console.log("opts: " + opts);
                     return go.utils
