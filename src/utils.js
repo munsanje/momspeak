@@ -2,7 +2,7 @@ var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var SESSION_ID = vumigo.utils.uuid();
-var VERSION = self.im.config.wit.version;
+// var VERSION = self.im.config.wit.version;
 
 go.utils = {
   //  return {action: 'action', wit_msg: 'wit_msg'}
@@ -36,13 +36,13 @@ go.utils = {
         var http = new JsonApi(im, {
             headers: {
                 'Authorization': ['Bearer ' + token],
-                'Accept': ['application/vnd.wit.' + VERSION + "+json"],
+                'Accept': ['application/vnd.wit.' + self.im.config.wit.version + "+json"],
                 'Content-Type': ['application/json']
             }
         });
         return http.post('https://api.wit.ai/converse?', {
             params: {
-                v: VERSION, // write method that extracts version
+                v: self.im.config.wit.version, // write method that extracts version
                 session_id: SESSION_ID,
                 q: content,
             }

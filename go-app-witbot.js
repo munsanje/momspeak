@@ -5,7 +5,7 @@ var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 var SESSION_ID = vumigo.utils.uuid();
-var VERSION = self.im.config.wit.version;
+// var VERSION = self.im.config.wit.version;
 
 go.utils = {
   //  return {action: 'action', wit_msg: 'wit_msg'}
@@ -39,13 +39,13 @@ go.utils = {
         var http = new JsonApi(im, {
             headers: {
                 'Authorization': ['Bearer ' + token],
-                'Accept': ['application/vnd.wit.' + VERSION + "+json"],
+                'Accept': ['application/vnd.wit.' + self.im.config.wit.version + "+json"],
                 'Content-Type': ['application/json']
             }
         });
         return http.post('https://api.wit.ai/converse?', {
             params: {
-                v: VERSION, // write method that extracts version
+                v: self.im.config.wit.version, // write method that extracts version
                 session_id: SESSION_ID,
                 q: content,
             }
@@ -63,8 +63,8 @@ go.app = function() {
     var FreeText = vumigo.states.FreeText;
 
     var prompt = 'Welcome to MomSpeak!';
-    var TOKEN = self.im.config.wit.token; //'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
-    var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
+    // var TOKEN = self.im.config.wit.token; //'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
+    // var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_converse');
@@ -83,7 +83,7 @@ go.app = function() {
                 next: function(response) {
                     console.log("opts: " + opts);
                     return go.utils
-                        .converse(self.im, TOKEN, response)
+                        .converse(self.im, self.im.config.wit.token, response)
                         // log wit's response
                         .then(function (wit_response) {
                             return self.im
@@ -107,7 +107,7 @@ go.app = function() {
                             // select only entities that satisfy threshold defined in config
                             // NOTE filter returns array ([a,b,c])
                             var entities = _.filter(all_entities, function(entity) {
-                                return entity.confidence > THRESHOLD;
+                                return entity.confidence > self.im.config.wit.confidence_threshold;
                             });
                             // if no entities satisfy threshold...
                             if(_.isEmpty(entities)) {
