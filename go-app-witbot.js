@@ -16,7 +16,7 @@ var converse_probe = function(im, token, content) {
       'Content-Type': ['application/json']
     }
   });
-    var resp = http.post('https://api.wit.ai/converse?', typeof content == null ?
+    var resp = http.post('https://api.wit.ai/converse?', content == null ?
                   {
                       params: {
                         v: im.config.wit.version, // write method that extracts version
