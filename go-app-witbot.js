@@ -77,7 +77,7 @@ go.app = function() {
     // var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
-        App.call(self, 'states_start');
+        App.call(self, 'states_converse');
 
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -133,9 +133,9 @@ go.app = function() {
                               self.im.log("Message: " +  wit_response.data.msg);
                               // prompt = 'Okay';
                               return {
-                                  name: 'user_state',//wit_response.entities[0],
+                                  name: 'states_converse',//wit_response.entities[0],
                                   creator_opts: {
-                                      msg: 'Okay'//wit_response.data.msg
+                                      msg: wit_response.data.msg
                                   }
                               };
                         });
@@ -164,7 +164,7 @@ go.app = function() {
             //     next: 'states_converse'
             // });
             return {
-                name: 'state_converse'
+                name: 'states_converse'
             };
         });
 
