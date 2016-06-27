@@ -92,11 +92,14 @@ go.app = function() {
             });
         });
 
-        self.states.add('states_start', function(name, opts) {
-            return new FreeText(name, {
-                question: prompt,
-                next: 'states_converse'
-            });
+        self.states.add('states_start', function(name) {
+            // return new FreeText(name, {
+            //     question: prompt,
+            //     next: 'states_converse'
+            // });
+            return {
+                name: 'state_converse'
+            };
         });
 
     });
