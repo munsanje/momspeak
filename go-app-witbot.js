@@ -31,17 +31,23 @@ var converse_probe = function(im, token, content) {
                     }
                 }
 
-        )
-        .then(function(response) {
-            if(response.type == 'merge') {
-                return converse_probe(im, token, null);
-            }
-            // else if (response.type == 'msg') {
-            //     //converse_probe(im, token, null);
-            //     return response;
-            // }
-            return response;
-        });
+                )
+                .then(function(response) {
+                    if(response.type == 'merge') {
+                        im.console.log("Executing merge");
+                        return converse_probe(im, token, null);
+                    }
+                    // else if (response.type == 'msg') {
+                    //     //converse_probe(im, token, null);
+                    //     return response;
+                    // }
+                    else if (response.type == 'msg') {
+                        im.console.log("Received message: " + response.msg);
+                        return response;
+
+                    }
+                    return response;
+                });
     return resp;
 };
 
