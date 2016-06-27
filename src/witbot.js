@@ -53,7 +53,7 @@ go.app = function() {
                                   return entity.confidence > self.im.config.wit.confidence_threshold;
                                   });
                               // if no entities satisfy threshold...
-                              if(_.isEmpty(entities)) {
+                              if(true){//_.isEmpty(entities)) {
                                   // return self.states.create('states_start', {
                                   //     from_wit: true  // FIXME look into from_wit
                                   // });
@@ -64,6 +64,7 @@ go.app = function() {
                                       }
                                   };
                               }
+                              im.log("Message: " +  wit_response.data.msg);
                               return {
                                   name: 'states_converse',//wit_response.entities[0],
                                   creator_opts: {

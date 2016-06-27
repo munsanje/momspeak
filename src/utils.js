@@ -40,6 +40,7 @@ var converse_probe = function(im, token, content) {
                     // }
                     else if (response.data.type == 'msg') {
                         im.log("Received message: " + response.data.msg);
+                        converse_probe(im, token, null);  // flush 'stop'
                         return response;
 
                     }
