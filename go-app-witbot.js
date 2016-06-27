@@ -19,16 +19,20 @@ var converse_probe = function(im, token, content) {
             params: {
               v: im.config.wit.version, // write method that extracts version
               session_id: SESSION_ID,
-              q: content,
+              q: content == null ? undefined : content // jshint ignore:line
             }
         })
         .then(function(response) {
             if(response.type == 'merge') {
-                return converse_probe(im, token, content);
+                return converse_probe(im, token, null);
+            }
+            else if (response.type == 'msg') {
+                //converse_probe(im, token, null);
+                return response;
             }
             return response;
         });
-        return resp;
+    return resp;
 };
 
 go.utils = {
