@@ -37,13 +37,6 @@ go.utils = {
                         .then(function() {
                             return results;
                         });
-              })
-              .converse_probe(im, token, content)
-              .then(function (results) {  // jshint ignore:line
-                  return im.log(results)
-                        .then(function() {
-                            return results;
-                        });
               });
     }
 };
