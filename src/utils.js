@@ -24,23 +24,19 @@ var converse_probe = function(im, token, content) {
 go.utils = {
 
     converse: function(im, token, content) {
-        resp = {};
-        while(resp.msg !== 'msg' || !("error" in resp)) {
-            converse_probe(im, token, content)
-                  .then(function (results) {  // jshint ignore:line
-                      return im.log(results)
-                            .then(function() {
-                                return results;
-                            });
-                  });
-                resp = converse_probe(im, token, content)
-                      .then(function (results) {  // jshint ignore:line
-                          return im.log(results)
-                                .then(function() {
-                                    return results;
-                                });
-                      });
-        }
-        return resp;
+        return converse_probe(im, token, content)
+              .then(function (results) {  // jshint ignore:line
+                  return im.log(results)
+                        .then(function() {
+                            return results;
+                        });
+              })
+              .converse_probe(im, token, content)
+              .then(function (results) {  // jshint ignore:line
+                  return im.log(results)
+                        .then(function() {
+                            return results;
+                        });
+              });
     }
 };
