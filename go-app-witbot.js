@@ -78,7 +78,7 @@ go.app = function() {
                 });
             }
             return new FreeText(name, {
-                question: opts.msg === null ? prompt : opts.msg,
+                question: opts.msg == null ? prompt : opts.msg, // jshint ignore:line
                 next: function(response) {
                     // console.log("opts: " + opts);
                     return go.utils
