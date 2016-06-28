@@ -77,34 +77,36 @@ go.app = function() {
     // var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
-        App.call(self, 'states_converse');
+        App.call(self, 'states_start');
 
         // converse
         self.states.add('states_converse', function(name, opts) {
             if(_.isEmpty(self.im.config.wit)) {
                 return self.states.create('states_noconfig_error');
             }
+            self.im.log("opts.msg: " + opts.msg);
             return new FreeText(name, {
-                question: opts.msg,
+                question: typeof opts.msg === 'undefined' ? prompt : opts.msg,
                 next: function(response) {
-                    return go.utils.converse(self.im, self.im.config.wit.token, response)
-                    .then(function(wit_response) {
-                        return self.im
-                              .log(wit_response)
-                              .then(function() {
-                                  return wit_response;
-                              });
-                    })
-                    .then(function(wit_response) {
-                        if("error" in wit_response) {
-                            return self.states.create('states_wit_error');
-                        }
-                        self.im.log("Message: " + wit_response.data.msg);
-                        return self.states.create('states_reply', {
-                                            msg: wit_response.data.msg
-                              });
+                      return go.utils.converse(self.im, self.im.config.wit.token, response)
+                      .then(function(wit_response) {
+                          return self.im
+                                .log(wit_response)
+                                .then(function() {
+                                    return wit_response;
+                                });
+                      })
+                      .then(function(wit_response) {
+                          if("error" in wit_response) {
+                              return self.states.create('states_wit_error');
+                          }
+                          self.im.log("Message: " + wit_response.data.msg);
+                          self.im.log("Type of response: " + typeof wit_response.data.msg);
+                          return self.states.create('states_reply', {
+                                              msg: wit_response.data.msg
+                                });
 
-                          });
+                      });
                   }
 
 
@@ -138,11 +140,7 @@ go.app = function() {
             });
         });
 
-        self.states.add('states_start', function(name) {
-            // return new FreeText(name, {
-            //     question: prompt,
-            //     next: 'states_converse'
-            // });
+        self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
                 msg: prompt
             });
