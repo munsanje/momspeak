@@ -130,28 +130,20 @@ go.app = function() {
                                       }
                                   };
                               } */
-                              self.im.log("Message: " +  wit_response.data.msg);
-                              // prompt = 'Okay';
-                              return {
-                                  name: 'states_converse',//wit_response.entities[0],
-                                  creator_opts: {
-                                      msg: wit_response.data.msg
-                                  }
-                              };
                               /*return self.states.create('states_converse', {
                                   msg: wit_response.data.msg
-                              });*/
+                                });*/
+                              self.im.log("Message: " +  wit_response.data.msg);
+                              prompt = wit_response.data.msg;
+                              return {
+                                name: 'states_converse',//wit_response.entities[0],
+                                creator_opts: {
+                                  msg: wit_response.data.msg
+                                }
+                              };
                         });
                     }
             });
-        });
-        self.states.add('user_state', function(name, opts) {
-            return {
-                name: 'states_converse',
-                creator_opts: {
-                    msg: opts.msg
-                }
-            };
         });
 
         self.states.add('states_end', function(name) {
@@ -170,7 +162,6 @@ go.app = function() {
                 name: 'states_converse'
             };
         });
-
     });
 
     return {
