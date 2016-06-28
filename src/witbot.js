@@ -16,35 +16,50 @@ go.app = function() {
 
         // converse
         self.states.add('states_converse', function(name, opts) {
-        if(_.isEmpty(self.im.config.wit)) {
-            return self.states.create('states_noconfig_error');
-        }
-        return new FreeText(name, {
-            question: opts.msg === undefined ? prompt : opts.msg,
-            next: function(response) {
-                return go.utils.converse(self.im, self.im.config.wit.token, response)
-                .then(function(wit_response) {
-                    return self.im
-                          .log(wit_response)
-                          .then(function() {
-                              return wit_response;
+            if(_.isEmpty(self.im.config.wit)) {
+                return self.states.create('states_noconfig_error');
+            }
+            return new FreeText(name, {
+                question: opts.msg === undefined ? prompt : opts.msg,
+                next: function(response) {
+                    return go.utils.converse(self.im, self.im.config.wit.token, response)
+                    .then(function(wit_response) {
+                        return self.im
+                              .log(wit_response)
+                              .then(function() {
+                                  return wit_response;
+                              });
+                    })
+                    .then(function(wit_response) {
+                        if("error" in wit_response) {
+                            return self.states.create('states_wit_error');
+                        }
+                        self.im.log("Message: " + wit_response.data.msg);
+                        return self.states.create('states_converse', {
+                                            msg: wit_response.data.msg
+                              });
+
                           });
-                })
-                .then(function(wit_response) {
-                    if("error" in wit_response) {
-                        return self.states.create('states_wit_error');
-                    }
-                    self.im.log("Message: " + wit_response.data.msg);
-                    return self.states.create('states_converse', {
-                                        msg: wit_response.data.msg
-                          });
-
-                        });
-              }
+                  }
 
 
+              });
+        });
+
+        self.states.add('states_noconfig_error', function(name) {
+            return new EndState(name, {
+                text: "Config file empty. Shutting down.",
+                next: 'states_start'
             });
         });
+
+        self.states.add('states_wit_error', function(name) {
+            return new EndState(name, {
+                text: "Error at Wit server. Shutting down.",
+                next: 'states_start'
+            });
+        });
+
         self.states.add('states_reply', function(name, opts) {
             return self.states.create('states_converse', {
                 msg: opts.msg
