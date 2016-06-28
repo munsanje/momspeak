@@ -101,7 +101,9 @@ go.app = function() {
                       })
                       .then(function(wit_response) {
                           if("error" in wit_response) {
-                              return self.states.create('states_wit_error');
+                              return {
+                                      name: 'states_wit_error'
+                                    };
                           }
                           self.im.log("Message: " + wit_response.data.msg);
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
