@@ -8,16 +8,14 @@ go.app = function() {
     var FreeText = vumigo.states.FreeText;
 
     var prompt = 'Welcome to MomSpeak!';
-    // var TOKEN = self.im.config.wit.token; //'CS5JSQLP3OO5MRLTYX3EVBEIJYRY3YPS';
-    // var THRESHOLD = self.im.config.wit.confidence_threshold; //0.8;
 
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
-          return self.states.create('states_converse', {creator_opts: {
-            msg: prompt
-          }});
+            return self.states.create('states_converse', {
+              msg: prompt
+            });
         });
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -41,13 +39,9 @@ go.app = function() {
                               return self.states.create('states_wit_error');
                           }
                           self.im.log("Message: " + wit_response.data.msg);
-                          // prompt = wit_response.data.msg;
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
-                          // return self.states.create('states_reply', {
-                          //                     msg: wit_response.data.msg
-                          //       });
                           return {
-                              name: 'states_reply',
+                              name: 'states_converse',
                               creator_opts: {
                                     msg: wit_response.data.msg
                               }
