@@ -77,9 +77,7 @@ go.app = function() {
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                creator_opts: {
                     msg: "Welcome to MomSpeak!"
-                  }
             });
         });
         // converse
@@ -109,9 +107,7 @@ go.app = function() {
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
                           return {
                               name: 'states_converse',
-                              creator_opts: {
                                   msg: wit_response.data.msg
-                              }
                           };
 
                       });
