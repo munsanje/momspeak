@@ -132,15 +132,15 @@ go.app = function() {
                               } */
                               self.im.log("Message: " +  wit_response.data.msg);
                               // prompt = 'Okay';
-                              /*return {
+                              return {
                                   name: 'states_converse',//wit_response.entities[0],
                                   creator_opts: {
                                       msg: wit_response.data.msg
                                   }
-                              };*/
-                              return self.states.create('states_converse', {
+                              };
+                              /*return self.states.create('states_converse', {
                                   msg: wit_response.data.msg
-                              });
+                              });*/
                         });
                     }
             });
