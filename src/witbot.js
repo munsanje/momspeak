@@ -7,14 +7,12 @@ go.app = function() {
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
 
-    var prompt = 'Welcome to MomSpeak!';
-
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-              msg: prompt
+              msg: "Welcome to MomSpeak!"
             });
         });
         // converse
@@ -24,7 +22,7 @@ go.app = function() {
             }
             self.im.log("opts.msg: " + opts.msg);
             return new FreeText(name, {
-                question: opts.msg === undefined ? prompt : opts.msg,
+                question: opts.msg,
                 next: function(response) {
                       return go.utils.converse(self.im, self.im.config.wit.token, response)
                       .then(function(wit_response) {
