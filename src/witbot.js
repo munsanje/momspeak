@@ -15,9 +15,9 @@ go.app = function() {
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
-          return self.states.create('states_converse', {
+          return self.states.create('states_converse', {creator_opts: {
             msg: prompt
-          });
+          }});
         });
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -26,7 +26,7 @@ go.app = function() {
             }
             self.im.log("opts.msg: " + opts.msg);
             return new FreeText(name, {
-                question: opts.msg,
+                question: opts.msg === undefined ? prompt : opts.msg,
                 next: function(response) {
                       return go.utils.converse(self.im, self.im.config.wit.token, response)
                       .then(function(wit_response) {
@@ -41,10 +41,17 @@ go.app = function() {
                               return self.states.create('states_wit_error');
                           }
                           self.im.log("Message: " + wit_response.data.msg);
+                          // prompt = wit_response.data.msg;
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
-                          return self.states.create('states_reply', {
-                                              msg: wit_response.data.msg
-                                });
+                          // return self.states.create('states_reply', {
+                          //                     msg: wit_response.data.msg
+                          //       });
+                          return {
+                              name: 'states_reply',
+                              creator_opts: {
+                                    msg: wit_response.data.msg
+                              }
+                          };
 
                       });
                   }
