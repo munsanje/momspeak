@@ -19,9 +19,9 @@ go.app = function() {
             if(_.isEmpty(self.im.config.wit)) {
                 return self.states.create('states_noconfig_error');
             }
-            self.im.log("opts.msg: " + opts.msg);
+            self.im.log("opts.message: " + opts.message);
             return new FreeText(name, {
-                question: typeof opts.msg === 'undefined' ? prompt : opts.msg,
+                question: opts.message,
                 next: function(response) {
                       return go.utils.converse(self.im, self.im.config.wit.token, response)
                       .then(function(wit_response) {
@@ -38,7 +38,7 @@ go.app = function() {
                           self.im.log("Message: " + wit_response.data.msg);
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
                           return self.states.create('states_reply', {
-                                              msg: wit_response.data.msg
+                                              message: wit_response.data.msg
                                 });
 
                       });
@@ -64,7 +64,7 @@ go.app = function() {
 
         self.states.add('states_reply', function(name, opts) {
             return self.states.create('states_converse', {
-                msg: opts.msg
+                message: opts.message
             });
         });
 
@@ -77,7 +77,7 @@ go.app = function() {
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                msg: prompt
+                message: prompt
             });
         });
 
