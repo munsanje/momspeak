@@ -13,9 +13,9 @@ go.app = function() {
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                creator_opts: {
+                // creator_opts: {
                     msg: "Welcome to MomSpeak!"
-                  }
+                  // }
             });
         });
         // converse
