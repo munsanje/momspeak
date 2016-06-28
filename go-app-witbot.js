@@ -81,68 +81,38 @@ go.app = function() {
 
         // converse
         self.states.add('states_converse', function(name, opts) {
-            if(_.isEmpty(self.im.config.wit)) {
-                return new EndState(name, {
-                    text: "Config file empty. Shutting down.",
-                    next: 'states_start'
-                });
-            }
-            return new FreeText(name, {
-                question: opts.msg == undefined ? prompt : opts.msg, // jshint ignore:line
-                next: function(response) {
-                    // console.log("opts: " + opts);
-                      return go.utils.converse(self.im, self.im.config.wit.token, response)
-                        // log wit's response
-                        .then(function (wit_response) {
-                            return self.im
-                                  .log(wit_response)
-                                  .then(function() {
-                                      return wit_response;
-                                  });
-                        })
-                        // taking object returned by `converse`
-                        .then(function(wit_response) {
-                            // console.log(wit_response);
-                              if("error" in wit_response) {
-                                  return new EndState(name, {
-                                      text: "Error at Wit server. Shutting down.",
-                                      next: 'states_start'
-                                  });
-                              }
-                            // sort entities returned by confidence
-/*
-                              var all_entities = _.sortBy(wit_response.data.entities,
-                                                          'confidence');
-                              // select only entities that satisfy threshold defined in config
-                              // NOTE filter returns array ([a,b,c])
-                              var entities = _.filter(all_entities, function(entity) {
-                                  return entity.confidence > self.im.config.wit.confidence_threshold;
-                                  });
-                              // if no entities satisfy threshold...
-                              if(_.isEmpty(entities)) {
-                                  // return self.states.create('states_start', {
-                                  //     from_wit: true  // FIXME look into from_wit
-                                  // });
-                                  return {
-                                      name: 'states_converse',
-                                      creator_opts: {
-                                          msg: "Sorry, could you say that again?"
-                                      }
-                                  };
-                              } */
-                              /*return self.states.create('states_converse', {
-                                  msg: wit_response.data.msg
-                                });*/
-                              self.im.log("Message: " +  wit_response.data.msg);
-                              prompt = wit_response.data.msg;
-                              return {
-                                name: 'states_converse',//wit_response.entities[0],
-                                creator_opts: {
-                                  msg: wit_response.data.msg
-                                }
-                              };
-                        });
+        if(_.isEmpty(self.im.config.wit)) {
+            return self.states.create('states_noconfig_error');
+        }
+        return new FreeText(name, {
+            question: opts.msg === undefined ? prompt : opts.msg,
+            next: function(response) {
+                return go.utils.converse(self.im, self.im.config.wit.token, response)
+                .then(function(wit_response) {
+                    return self.im
+                          .log(wit_response)
+                          .then(function() {
+                              return wit_response;
+                          });
+                })
+                .then(function(wit_response) {
+                    if("error" in wit_response) {
+                        return self.states.create('states_wit_error');
                     }
+                    self.im.log("Message: " + wit_response.data.msg);
+                    return self.states.create('states_converse', {
+                                        msg: wit_response.data.msg
+                          });
+
+                        });
+              }
+
+
+            });
+        });
+        self.states.add('states_reply', function(name, opts) {
+            return self.states.create('states_converse', {
+                msg: opts.msg
             });
         });
 
@@ -159,7 +129,10 @@ go.app = function() {
             //     next: 'states_converse'
             // });
             return {
-                name: 'states_converse'
+                name: 'states_converse',
+                creator_opts : {
+                    msg: prompt
+                }
             };
         });
     });
