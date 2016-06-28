@@ -6,13 +6,16 @@ go.app = function() {
     var ChoiceState = vumigo.states.ChoiceState;
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
+    var SESSION_ID = vumigo.utils.uuid();
 
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-              msg: "Welcome to MomSpeak!"
+                creator_opts: {
+                    msg: "Welcome to MomSpeak!"
+                  }
             });
         });
         // converse
@@ -24,7 +27,7 @@ go.app = function() {
             return new FreeText(name, {
                 question: opts.msg,
                 next: function(response) {
-                      return go.utils.converse(self.im, self.im.config.wit.token, response)
+                      return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
                       .then(function(wit_response) {
                           return self.im
                                 .log(wit_response)
@@ -40,9 +43,8 @@ go.app = function() {
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
                           return {
                               name: 'states_converse',
-                              creator_opts: {
-                                    msg: wit_response.data.msg
-                              }
+                              msg: wit_response.data.msg
+
                           };
 
                       });

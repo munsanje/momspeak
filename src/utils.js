@@ -2,10 +2,9 @@
 var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
-var SESSION_ID = vumigo.utils.uuid();
 // var VERSION = self.im.config.wit.version;
 
-var converse_probe = function(im, token, content) {
+var converse_probe = function(im, token, SESSION_ID, content) {
     var http = new JsonApi(im, {
         headers: {
           'Authorization': ['Bearer ' + token],
@@ -49,7 +48,7 @@ var converse_probe = function(im, token, content) {
 };
 
 go.utils = {
-    converse: function(im, token, content) {
+    converse: function(im, token, SESSION_ID, content) {
         return converse_probe(im, token, content)
               .then(function (results) {  // jshint ignore:line
                   return im.log(results)
