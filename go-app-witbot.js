@@ -30,7 +30,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
                           session_id: SESSION_ID,
                           q: content
                         }
-                    }
+                      }
                 )
                 .then(function(response) {
                     if(response.data.type == 'merge') {
@@ -83,7 +83,9 @@ go.app = function() {
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                        session_id: SESSION_ID
+                        creator_opts: {
+                            session_id: SESSION_ID
+                      }
                   }
             );
         });
@@ -149,8 +151,10 @@ go.app = function() {
         self.states.add('states_reply', function(name, opts) {
             self.im.log("In `states_reply`\n\topts.msg: " + opts.msg + "\nPassing to `states_converse`..");
             return self.states.create('states_converse', {
-                    msg: opts.msg,
-                    session_id: opts.session_id
+                    creator_opts: {
+                        msg: opts.msg,
+                        session_id: opts.session_id
+                  }
             });
         });
 

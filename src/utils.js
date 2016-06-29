@@ -27,7 +27,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
                           session_id: SESSION_ID,
                           q: content
                         }
-                    }
+                      }
                 )
                 .then(function(response) {
                     if(response.data.type == 'merge') {
