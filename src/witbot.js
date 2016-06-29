@@ -6,21 +6,21 @@ go.app = function() {
     var ChoiceState = vumigo.states.ChoiceState;
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
+    var SESSION_ID = vumigo.utils.uuid();
     // TODO make menu state as start state with option to reset, resume, etc
     /* NOTE vumigo saves user's state so maybe generating a unique session id each time app is started is wrong way to go
      Maybe new id per user instead */
     var MomSpeak = App.extend(function(self){
-        var SESSION_ID = vumigo.utils.uuid();
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
                     // msg: "Welcome to MomSpeak!",
-                    // creator_opts: {
-                    //     session_id: SESSION_ID
+                    creator_opts: {
+                        session_id: SESSION_ID
                     }
-          //  }
-          );
+                  }
+            );
         });
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -32,8 +32,8 @@ go.app = function() {
             return new FreeText(name, {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
-                      self.im.log("session_id: " + SESSION_ID);
-                      return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
+                      self.im.log("session_id: " + opts.session_id);
+                      return go.utils.converse(self.im, self.im.config.wit.token, opts.session_id, response)
                       .then(function(wit_response) {
                           return self.im
                                 .log(wit_response)
@@ -51,7 +51,7 @@ go.app = function() {
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
                           opts.msg = wit_response.data.msg;
                           self.im.log("opts.msg: " + opts.msg);
-                          self.im.log("Passing to `states_reply`...")
+                          self.im.log("Passing to `states_reply`...");
                           return {
                               name: 'states_reply',
                               creator_opts: {
