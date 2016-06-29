@@ -57,7 +57,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
 
 go.utils = {
     converse: function(im, token, SESSION_ID, content) {
-        im.log(SESSION_ID);
+        im.log('utils.sessionid: ' + SESSION_ID);
         return converse_probe(im, token, SESSION_ID, content)
               .then(function (results) {
                   return im.log(results)

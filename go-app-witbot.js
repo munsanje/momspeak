@@ -60,7 +60,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
 
 go.utils = {
     converse: function(im, token, SESSION_ID, content) {
-        im.log(SESSION_ID);
+        im.log('utils.sessionid: ' + SESSION_ID);
         return converse_probe(im, token, SESSION_ID, content)
               .then(function (results) {
                   return im.log(results)
@@ -124,8 +124,8 @@ go.app = function() {
                           opts.msg = wit_response.data.msg;
                           self.im.log("opts.msg: " + opts.msg);
                           return {
-                              name: 'states_converse',
-                                  // msg: wit_response.data.msg
+                              name: 'states_reply',
+                              msg: wit_response.data.msg
                           };
 
                       });

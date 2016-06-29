@@ -51,8 +51,8 @@ go.app = function() {
                           opts.msg = wit_response.data.msg;
                           self.im.log("opts.msg: " + opts.msg);
                           return {
-                              name: 'states_converse',
-                                  // msg: wit_response.data.msg
+                              name: 'states_reply',
+                              msg: wit_response.data.msg
                           };
 
                       });
