@@ -9,7 +9,7 @@ go.app = function() {
     var SESSION_ID = vumigo.utils.uuid();
     // TODO make menu state as start state with option to reset, resume, etc
 
-    var MomSpeak = App.extend(function(self){
+    var MomSpeak = App.extend(function(self) {
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
@@ -23,12 +23,12 @@ go.app = function() {
             if(_.isEmpty(self.im.config.wit)) {
                 return self.states.create('states_noconfig_error');
             }
-            self.im.log("Entered `states_converse` with");
-            self.im.log("opts.msg: " + opts.msg);
+            self.im.log.debug("Entered `states_converse` with");
+            self.im.log.debug("opts.msg: " + opts.msg);
             return new FreeText(name, {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
-                      self.im.log("session_id: " + opts.session_id);
+                      self.im.log.debug("session_id: " + opts.session_id);
                       return go.utils.converse(self.im, self.im.config.wit.token, opts.session_id, response)
                       .then(function(wit_response) {
                           return self.im
@@ -43,11 +43,11 @@ go.app = function() {
                                       name: 'states_wit_error'
                                     };
                           }
-                          self.im.log("Message: " + wit_response.data.msg);
-                          self.im.log("Type of response: " + typeof wit_response.data.msg);
+                          self.im.log.debug("Message: " + wit_response.data.msg);
+                          self.im.log.debug("Type of response: " + typeof wit_response.data.msg);
                           opts.msg = wit_response.data.msg;
-                          self.im.log("opts.msg: " + opts.msg);
-                          self.im.log("Passing to `states_reply`...");
+                          self.im.log.debug("opts.msg: " + opts.msg);
+                          self.im.log.debug("Passing to `states_reply`...");
                           return {
                               name: 'states_reply',
                               creator_opts: {
@@ -78,7 +78,7 @@ go.app = function() {
         });
 
         self.states.add('states_reply', function(name, opts) {
-            self.im.log("In `states_reply`\n\topts.msg: " + opts.msg + "\nPassing to `states_converse`..");
+            self.im.log.debug("In `states_reply`\n\topts.msg: " + opts.msg + "\nPassing to `states_converse`..");
             return self.states.create('states_converse', {
                     msg: opts.msg,
                     session_id: opts.session_id
