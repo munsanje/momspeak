@@ -4,6 +4,8 @@ var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 // var VERSION = self.im.config.wit.version;
 
+var SESSION_ID = vumigo.utils.uuid();
+
 var converse_probe = function(im, token, SESSION_ID, content) {
     var http = new JsonApi(im, {
         headers: {
@@ -54,7 +56,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
 };
 
 go.utils = {
-    converse: function(im, token, SESSION_ID, content) {
+    converse: function(im, token/*, SESSION_ID*/, content) {
         return converse_probe(im, token, SESSION_ID, content)
               .then(function (results) {
                   return im.log(results)
