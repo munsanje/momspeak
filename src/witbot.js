@@ -27,6 +27,7 @@ go.app = function() {
             if(_.isEmpty(self.im.config.wit)) {
                 return self.states.create('states_noconfig_error');
             }
+            self.im.log("Entered `states_converse` with");
             self.im.log("opts.msg: " + opts.msg);
             return new FreeText(name, {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
@@ -50,6 +51,7 @@ go.app = function() {
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
                           opts.msg = wit_response.data.msg;
                           self.im.log("opts.msg: " + opts.msg);
+                          self.im.log("Passing to `states_reply`...")
                           return {
                               name: 'states_reply',
                               creator_opts: {
@@ -79,10 +81,11 @@ go.app = function() {
         });
 
         self.states.add('states_reply', function(name, opts) {
+            self.im.log("In `states_reply`\n\topts.msg: " + opts.msg + "\nPassing to `states_converse`..");
             return self.states.create('states_converse', {
-                creator_opts: {
+                // creator_opts: {
                     msg: opts.msg
-                }
+                // }
             });
         });
 
