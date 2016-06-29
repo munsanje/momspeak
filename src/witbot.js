@@ -55,7 +55,8 @@ go.app = function() {
                           return {
                               name: 'states_reply',
                               creator_opts: {
-                                  msg: wit_response.data.msg
+                                  msg: wit_response.data.msg,
+                                  session_id: session_id
                               }
                           };
 
@@ -85,6 +86,7 @@ go.app = function() {
             return self.states.create('states_converse', {
                 // creator_opts: {
                     msg: opts.msg
+                    session_id: session_id
                 // }
             });
         });
