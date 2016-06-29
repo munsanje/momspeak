@@ -16,9 +16,9 @@ go.app = function() {
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
                     // msg: "Welcome to MomSpeak!",
-                    creator_opts: {
+                    // creator_opts: {
                         session_id: SESSION_ID
-                    }
+                    // }
                   }
             );
         });
@@ -32,7 +32,7 @@ go.app = function() {
             return new FreeText(name, {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
-                      self.im.log("session_id: " + self.im.creator_opts.session_id);//opts.session_id);
+                      self.im.log("session_id: " + opts.session_id);
                       return go.utils.converse(self.im, self.im.config.wit.token, opts.session_id, response)
                       .then(function(wit_response) {
                           return self.im
@@ -56,7 +56,7 @@ go.app = function() {
                               name: 'states_reply',
                               creator_opts: {
                                   msg: wit_response.data.msg,
-                                  'session_id': opts.session_id
+                                  session_id: opts.session_id
                               }
                           };
 
@@ -86,7 +86,7 @@ go.app = function() {
             return self.states.create('states_converse', {
                 // creator_opts: {
                     msg: opts.msg,
-                    'session_id': opts.session_id
+                    session_id: opts.session_id
                 // }
             });
         });
