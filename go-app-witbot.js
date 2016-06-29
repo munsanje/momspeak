@@ -60,6 +60,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
 
 go.utils = {
     converse: function(im, token, SESSION_ID, content) {
+        im.log(SESSION_ID);
         return converse_probe(im, token, SESSION_ID, content)
               .then(function (results) {
                   return im.log(results)
@@ -103,6 +104,7 @@ go.app = function() {
             return new FreeText(name, {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
+                      self.im.log("session_id: " + SESSION_ID);
                       return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
                       // .then(function(wit_response) {
                       //     return self.im
