@@ -14,11 +14,11 @@ go.app = function() {
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
-            return self.states.create('states_converse'//, {
+            return self.states.create('states_converse', {
                     // msg: "Welcome to MomSpeak!",
                     // creator_opts: {
                     //     session_id: SESSION_ID
-                    // }
+                    }
           //  }
           );
         });
@@ -48,6 +48,7 @@ go.app = function() {
                           self.im.log("Message: " + wit_response.data.msg);
                           self.im.log("Type of response: " + typeof wit_response.data.msg);
                           opts.msg = wit_response.data.msg;
+                          self.im.log("opts.msg: " + opts.msg);
                           return {
                               name: 'states_converse',
                                   // msg: wit_response.data.msg
