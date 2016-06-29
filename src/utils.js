@@ -12,37 +12,43 @@ var converse_probe = function(im, token, SESSION_ID, content) {
           'Content-Type': ['application/json']
         }
     });
+    // FIXME add action support
     return http.post('https://api.wit.ai/converse?', content == null ?
-                  {
-                      params: {
-                        v: im.config.wit.version, // write method that extracts version
-                        session_id: SESSION_ID
-                      }
-                  } :
-                  {
-                    params: {
-                      v: im.config.wit.version, // write method that extracts version
-                      session_id: SESSION_ID,
-                      q: content // jshint ignore:line
+                      {
+                          params: {
+                            v: im.config.wit.version, // write method that extracts version
+                            session_id: SESSION_ID
+                          }
+                      } :
+                      {
+                        params: {
+                          v: im.config.wit.version, // write method that extracts version
+                          session_id: SESSION_ID,
+                          q: content
+                        }
                     }
-                }
-
                 )
                 .then(function(response) {
                     if(response.data.type == 'merge') {
                         im.log("Executing merge");
                         return converse_probe(im, token, null);
                     }
-                    // else if (response.type == 'msg') {
-                    //     //converse_probe(im, token, null);
-                    //     return response;
-                    // }
+                    // NOTE type is one of 'merge', 'msg', 'action', 'stop', 'error'
                     else if (response.data.type == 'msg') {
                         im.log("Received message: " + response.data.msg);
                         converse_probe(im, token, null);  // flush 'stop'
                         return response;
 
                     }
+                    else if (response.data.type == 'stop') {
+                        im.log("Received type: stop");
+                        return response;
+                    }
+                    // TODO implement action handler
+                  /*  else if(response.data.type == 'action') {
+                        im.log("Execution action: " + response.data.action );
+
+                    }*/
                     return response;
                 });
 };
@@ -50,7 +56,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
 go.utils = {
     converse: function(im, token, SESSION_ID, content) {
         return converse_probe(im, token, content)
-              .then(function (results) {  // jshint ignore:line
+              .then(function (results) {
                   return im.log(results)
                         .then(function() {
                             return results;

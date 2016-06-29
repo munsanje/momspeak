@@ -15,37 +15,43 @@ var converse_probe = function(im, token, SESSION_ID, content) {
           'Content-Type': ['application/json']
         }
     });
+    // FIXME add action support
     return http.post('https://api.wit.ai/converse?', content == null ?
-                  {
-                      params: {
-                        v: im.config.wit.version, // write method that extracts version
-                        session_id: SESSION_ID
-                      }
-                  } :
-                  {
-                    params: {
-                      v: im.config.wit.version, // write method that extracts version
-                      session_id: SESSION_ID,
-                      q: content // jshint ignore:line
+                      {
+                          params: {
+                            v: im.config.wit.version, // write method that extracts version
+                            session_id: SESSION_ID
+                          }
+                      } :
+                      {
+                        params: {
+                          v: im.config.wit.version, // write method that extracts version
+                          session_id: SESSION_ID,
+                          q: content
+                        }
                     }
-                }
-
                 )
                 .then(function(response) {
                     if(response.data.type == 'merge') {
                         im.log("Executing merge");
                         return converse_probe(im, token, null);
                     }
-                    // else if (response.type == 'msg') {
-                    //     //converse_probe(im, token, null);
-                    //     return response;
-                    // }
+                    // NOTE type is one of 'merge', 'msg', 'action', 'stop', 'error'
                     else if (response.data.type == 'msg') {
                         im.log("Received message: " + response.data.msg);
                         converse_probe(im, token, null);  // flush 'stop'
                         return response;
 
                     }
+                    else if (response.data.type == 'stop') {
+                        im.log("Received type: stop");
+                        return response;
+                    }
+                    // TODO implement action handler
+                  /*  else if(response.data.type == 'action') {
+                        im.log("Execution action: " + response.data.action );
+
+                    }*/
                     return response;
                 });
 };
@@ -53,7 +59,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
 go.utils = {
     converse: function(im, token, SESSION_ID, content) {
         return converse_probe(im, token, content)
-              .then(function (results) {  // jshint ignore:line
+              .then(function (results) {
                   return im.log(results)
                         .then(function() {
                             return results;
@@ -71,13 +77,18 @@ go.app = function() {
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
     var SESSION_ID = vumigo.utils.uuid();
-
+    // TODO make menu state as start state with option to reset, resume, etc
+    /* NOTE vumigo saves user's state so maybe generating a unique session id each time app is started is wrong way to go
+     Maybe new id per user instead */
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                    msg: "Welcome to MomSpeak!"
+                    msg: "Welcome to MomSpeak!",
+                    creator_opts: {
+                        session_id: SESSION_ID
+                    }
             });
         });
         // converse
@@ -89,7 +100,7 @@ go.app = function() {
             return new FreeText(name, {
                 question: opts.msg,
                 next: function(response) {
-                      return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
+                      return go.utils.converse(self.im, self.im.config.wit.token, session_id, response)
                       .then(function(wit_response) {
                           return self.im
                                 .log(wit_response)
