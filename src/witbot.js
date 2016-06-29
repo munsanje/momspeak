@@ -14,12 +14,13 @@ go.app = function() {
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
-            return self.states.create('states_converse', {
-                    msg: "Welcome to MomSpeak!",
+            return self.states.create('states_converse'//, {
+                    // msg: "Welcome to MomSpeak!",
                     // creator_opts: {
                     //     session_id: SESSION_ID
                     // }
-            });
+          //  }
+          );
         });
         // converse
         self.states.add('states_converse', function(name, opts) {
@@ -28,7 +29,7 @@ go.app = function() {
             }
             self.im.log("opts.msg: " + opts.msg);
             return new FreeText(name, {
-                question: opts.msg,
+                question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
                       return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
                       .then(function(wit_response) {
