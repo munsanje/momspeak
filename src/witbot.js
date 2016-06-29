@@ -6,15 +6,17 @@ go.app = function() {
     var ChoiceState = vumigo.states.ChoiceState;
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
-    var SESSION_ID = vumigo.utils.uuid();
     // TODO make menu state as start state with option to reset, resume, etc
 
     var MomSpeak = App.extend(function(self) {
+        var SESSION_ID = vumigo.utils.uuid();
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                        session_id: SESSION_ID
+                        creator_opts: {
+                            session_id: SESSION_ID
+                      }
                   }
             );
         });
