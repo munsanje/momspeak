@@ -31,7 +31,7 @@ go.app = function() {
             return new FreeText(name, {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
-                      return go.utils.converse(self.im, self.im.config.wit.token/*, SESSION_ID*/, response)
+                      return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
                       // .then(function(wit_response) {
                       //     return self.im
                       //           .log(wit_response)
