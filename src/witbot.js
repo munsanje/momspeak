@@ -34,13 +34,13 @@ go.app = function() {
                 next: function(response) {
                       self.im.log("session_id: " + SESSION_ID);
                       return go.utils.converse(self.im, self.im.config.wit.token, SESSION_ID, response)
-                      // .then(function(wit_response) {
-                      //     return self.im
-                      //           .log(wit_response)
-                      //           .then(function() {
-                      //               return wit_response;
-                      //           });
-                      // })
+                      .then(function(wit_response) {
+                          return self.im
+                                .log(wit_response)
+                                .then(function() {
+                                    return wit_response;
+                                });
+                      })
                       .then(function(wit_response) {
                           if("error" in wit_response) {
                               return {
