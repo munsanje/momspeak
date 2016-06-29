@@ -2,7 +2,6 @@
 var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
-// var VERSION = self.im.config.wit.version;
 
 // var SESSION_ID = vumigo.utils.uuid();
 
@@ -47,10 +46,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
                         return response;
                     }
                     // TODO implement action handler
-                  /*  else if(response.data.type == 'action') {
-                        im.log("Execution action: " + response.data.action );
 
-                    }*/
                     return response;
                 });
 };

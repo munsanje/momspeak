@@ -5,7 +5,6 @@ go;
 var _ = require('lodash');
 var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
-// var VERSION = self.im.config.wit.version;
 
 // var SESSION_ID = vumigo.utils.uuid();
 
@@ -50,10 +49,7 @@ var converse_probe = function(im, token, SESSION_ID, content) {
                         return response;
                     }
                     // TODO implement action handler
-                  /*  else if(response.data.type == 'action') {
-                        im.log("Execution action: " + response.data.action );
 
-                    }*/
                     return response;
                 });
 };
@@ -81,17 +77,13 @@ go.app = function() {
     var FreeText = vumigo.states.FreeText;
     var SESSION_ID = vumigo.utils.uuid();
     // TODO make menu state as start state with option to reset, resume, etc
-    /* NOTE vumigo saves user's state so maybe generating a unique session id each time app is started is wrong way to go
-     Maybe new id per user instead */
+
     var MomSpeak = App.extend(function(self){
         App.call(self, 'states_start');
 
         self.states.add('states_start', function(name, opts) {
             return self.states.create('states_converse', {
-                    // msg: "Welcome to MomSpeak!",
-                    // creator_opts: {
                         session_id: SESSION_ID
-                    // }
                   }
             );
         });
@@ -157,10 +149,8 @@ go.app = function() {
         self.states.add('states_reply', function(name, opts) {
             self.im.log("In `states_reply`\n\topts.msg: " + opts.msg + "\nPassing to `states_converse`..");
             return self.states.create('states_converse', {
-                // creator_opts: {
                     msg: opts.msg,
                     session_id: opts.session_id
-                // }
             });
         });
 
