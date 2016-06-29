@@ -153,7 +153,9 @@ go.app = function() {
 
         self.states.add('states_reply', function(name, opts) {
             return self.states.create('states_converse', {
-                msg: opts.msg
+                creator_opts: {
+                    msg: opts.msg
+                }
             });
         });
 
