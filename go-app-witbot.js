@@ -158,7 +158,7 @@ go.app = function() {
             self.im.log("In `states_reply`\n\topts.msg: " + opts.msg + "\nPassing to `states_converse`..");
             return self.states.create('states_converse', {
                 // creator_opts: {
-                    msg: opts.msg
+                    msg: opts.msg,
                     session_id: session_id
                 // }
             });
