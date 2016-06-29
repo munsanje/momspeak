@@ -7,9 +7,9 @@ var vumigo = require('vumigo_v02');
 var JsonApi = vumigo.http.api.JsonApi;
 // var VERSION = self.im.config.wit.version;
 
-var SESSION_ID = vumigo.utils.uuid();
+// var SESSION_ID = vumigo.utils.uuid();
 
-var converse_probe = function(im, token, /*SESSION_ID,*/ content) {
+var converse_probe = function(im, token, SESSION_ID, content) {
     var http = new JsonApi(im, {
         headers: {
           'Authorization': ['Bearer ' + token],
@@ -59,8 +59,8 @@ var converse_probe = function(im, token, /*SESSION_ID,*/ content) {
 };
 
 go.utils = {
-    converse: function(im, token/*, SESSION_ID*/, content) {
-        return converse_probe(im, token, /*SESSION_ID,*/ content)
+    converse: function(im, token, SESSION_ID, content) {
+        return converse_probe(im, token, SESSION_ID, content)
               .then(function (results) {
                   return im.log(results)
                         .then(function() {
@@ -78,7 +78,7 @@ go.app = function() {
     var ChoiceState = vumigo.states.ChoiceState;
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
-    // var SESSION_ID = vumigo.utils.uuid();
+    var SESSION_ID = vumigo.utils.uuid();
     // TODO make menu state as start state with option to reset, resume, etc
     /* NOTE vumigo saves user's state so maybe generating a unique session id each time app is started is wrong way to go
      Maybe new id per user instead */
@@ -104,13 +104,13 @@ go.app = function() {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
                       return go.utils.converse(self.im, self.im.config.wit.token/*, SESSION_ID*/, response)
-                      .then(function(wit_response) {
-                          return self.im
-                                .log(wit_response)
-                                .then(function() {
-                                    return wit_response;
-                                });
-                      })
+                      // .then(function(wit_response) {
+                      //     return self.im
+                      //           .log(wit_response)
+                      //           .then(function() {
+                      //               return wit_response;
+                      //           });
+                      // })
                       .then(function(wit_response) {
                           if("error" in wit_response) {
                               return {

@@ -6,7 +6,7 @@ go.app = function() {
     var ChoiceState = vumigo.states.ChoiceState;
     var EndState = vumigo.states.EndState;
     var FreeText = vumigo.states.FreeText;
-    // var SESSION_ID = vumigo.utils.uuid();
+    var SESSION_ID = vumigo.utils.uuid();
     // TODO make menu state as start state with option to reset, resume, etc
     /* NOTE vumigo saves user's state so maybe generating a unique session id each time app is started is wrong way to go
      Maybe new id per user instead */
@@ -32,13 +32,13 @@ go.app = function() {
                 question: opts.msg === undefined ? "Welcome to MomSpeak" : opts.msg,
                 next: function(response) {
                       return go.utils.converse(self.im, self.im.config.wit.token/*, SESSION_ID*/, response)
-                      .then(function(wit_response) {
-                          return self.im
-                                .log(wit_response)
-                                .then(function() {
-                                    return wit_response;
-                                });
-                      })
+                      // .then(function(wit_response) {
+                      //     return self.im
+                      //           .log(wit_response)
+                      //           .then(function() {
+                      //               return wit_response;
+                      //           });
+                      // })
                       .then(function(wit_response) {
                           if("error" in wit_response) {
                               return {
