@@ -52,7 +52,9 @@ go.app = function() {
                           self.im.log("opts.msg: " + opts.msg);
                           return {
                               name: 'states_reply',
-                              msg: wit_response.data.msg
+                              creator_opts: {
+                                  msg: wit_response.data.msg
+                              }
                           };
 
                       });
